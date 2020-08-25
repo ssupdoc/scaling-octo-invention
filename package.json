@@ -1,0 +1,24 @@
+{
+  "name": "scaling-octo-invention",
+  "version": "1.0.0",
+  "description": "It really is meant to scale",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ssupdoc/scaling-octo-invention.git"
+  },
+  "author": "ssupdoc",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ssupdoc/scaling-octo-invention/issues"
+  },
+  "homepage": "https://github.com/ssupdoc/scaling-octo-invention#readme",
+  "dependencies": {
+    "async": "^3.2.0",
+    "aws-sdk": "^2.739.0",
+    "lodash": "^4.17.20"
+  }
+}
