@@ -26,25 +26,19 @@ const ATHENA_OUTPUT_LOCATION = 's3://orp-test-bucket/'
 const RESULT_SIZE = 1000
 const POLL_INTERVAL = 1000
 
-let creds = new AWS.SharedIniFileCredentials({filename:'/Users/sriramjayaraman/.aws/credentials', profile: 'default'});
+const PORT = process.env.PORT || 3000;
+
+let creds = new AWS.SharedIniFileCredentials({ filename: '/Users/sriramjayaraman/.aws/credentials', profile: 'default' });
 AWS.config.credentials = creds;
 
-let client = new AWS.Athena({region: 'us-east-1'})
+let client = new AWS.Athena({ region: 'us-east-1' })
 
 /* Create an async queue to handle polling for query results */
 let q = Queue((id, cb) => {
     startPolling(id)
-    .then((data) => { return cb(null, data) })
-    .catch((err) => { console.log('Failed to poll query: ', err); return cb(err) })
+        .then((data) => { return cb(null, data) })
+        .catch((err) => { console.log('Failed to poll query: ', err); return cb(err) })
 }, 5);
-
-/* Make a SQL query and display results */
-makeQuery("select * from amazon_reviews_parquet where product_category='Watches' limit 10;")
-.then((data) => {
-    console.log('Row Count: ', data.length)
-    console.log('DATA: ', data)
-})
-.catch((e) => { console.log('ERROR: ', e) })
 
 
 function makeQuery(sql) {
@@ -63,8 +57,8 @@ function makeQuery(sql) {
                 if (err) return reject(err)
                 /* Once query completed executing, get and process results */
                 return buildResults(qid)
-                .then((data) => { return resolve(data) })
-                .catch((err) => { return reject(err) })
+                    .then((data) => { return resolve(data) })
+                    .catch((err) => { return reject(err) })
             })
         })
     })
@@ -86,13 +80,13 @@ function buildResults(query_id, max, page) {
         /* Get results and iterate through all pages */
         function go(param) {
             getResults(param)
-            .then((res) => {
-                dataBlob = _.concat(dataBlob, res.list)
-                if (res.next) {
-                    param.NextToken = res.next
-                    return go(param)
-                } else return resolve(dataBlob)
-            }).catch((err) => { return reject(err) })
+                .then((res) => {
+                    dataBlob = _.concat(dataBlob, res.list)
+                    if (res.next) {
+                        param.NextToken = res.next
+                        return go(param)
+                    } else return resolve(dataBlob)
+                }).catch((err) => { return reject(err) })
         }
 
         /* Process results merging column names and values into a JS object */
@@ -107,9 +101,9 @@ function buildResults(query_id, max, page) {
                         data.ResultSet.Rows :
                         _.drop(data.ResultSet.Rows)
                     resultSet.forEach((item) => {
-                        list.push(_.zipObject(header, _.map(item.Data, (n) => {return n.VarCharValue })))
+                        list.push(_.zipObject(header, _.map(item.Data, (n) => { return n.VarCharValue })))
                     })
-                    return resolve({next: ('NextToken' in data) ? data.NextToken : undefined, list: list})
+                    return resolve({ next: ('NextToken' in data) ? data.NextToken : undefined, list: list })
                 })
             })
         }
@@ -119,7 +113,7 @@ function buildResults(query_id, max, page) {
 function startPolling(id) {
     return new Promise((resolve, reject) => {
         function poll(id) {
-            client.getQueryExecution({QueryExecutionId: id}, (err, data) => {
+            client.getQueryExecution({ QueryExecutionId: id }, (err, data) => {
                 if (err) return reject(err)
                 if (data.QueryExecution.Status.State === 'SUCCEEDED') return resolve(id)
                 else if (['FAILED', 'CANCELLED'].includes(data.QueryExecution.Status.State)) return reject(new Error(`Query ${data.QueryExecution.Status.State}`))
@@ -133,3 +127,27 @@ function startPolling(id) {
 function buildHeader(columns) {
     return _.map(columns, (i) => { return i.Name })
 }
+
+var express = require('express');
+var app = express();
+
+app.get('/', function (req, res) {
+    res.send('Hello World');
+})
+
+app.get('/fetch', function (req, res) {
+    /* Make a SQL query and display results */
+    makeQuery("select * from amazon_reviews_parquet where product_category='Watches' limit 10;")
+        .then((data) => {
+            console.log('Row Count: ', data.length)
+            console.log('DATA: ', data)
+            return res.json(data)
+        })
+        .catch((e) => { console.log('ERROR: ', e) })
+})
+
+var server = app.listen(PORT, function () {
+    var port = server.address().port
+
+    console.log("scaling octo invention listening at %s", port)
+})
