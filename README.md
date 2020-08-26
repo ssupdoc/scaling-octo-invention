@@ -1,2 +1,2 @@
 # scaling-octo-invention
-It really is meant to scale
+An auto generated name. But it really is meant to scale.
