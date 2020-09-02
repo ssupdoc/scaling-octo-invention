@@ -17,6 +17,8 @@
 // For more information about Amazon Athena, see the user guide and API reference at:
 // https://docs.aws.amazon.com/athena
 
+const path = require('path');
+
 const AWS = require('aws-sdk')
 const Queue = require('async/queue')
 const _ = require('lodash')
@@ -131,11 +133,7 @@ function buildHeader(columns) {
 var express = require('express');
 var app = express();
 
-app.get('/', function (req, res) {
-    res.send('Hello World');
-})
-
-app.get('/fetch', function (req, res) {
+app.get('/api/fetch', function (req, res) {
     /* Make a SQL query and display results */
     makeQuery("select * from amazon_reviews_parquet where product_category='Watches' limit 10;")
         .then((data) => {
@@ -145,6 +143,25 @@ app.get('/fetch', function (req, res) {
         })
         .catch((e) => { console.log('ERROR: ', e) })
 })
+
+const allowedExt = [
+    '.js',
+    '.ico',
+    '.css',
+    '.png',
+    '.jpg',
+    '.woff2',
+    '.woff',
+    '.ttf',
+    '.svg',
+];
+app.get('*', (req, res) => {
+    if (allowedExt.filter(ext => req.url.indexOf(ext) > 0).length > 0) {
+        res.sendFile(path.resolve(`client/${req.url}`));
+    } else {
+        res.sendFile(path.resolve('client/index.html'));
+    }
+});
 
 var server = app.listen(PORT, function () {
     var port = server.address().port
