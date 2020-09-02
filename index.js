@@ -30,8 +30,11 @@ const POLL_INTERVAL = 1000
 
 const PORT = process.env.PORT || 3000;
 
-let creds = new AWS.SharedIniFileCredentials({ filename: '/Users/sriramjayaraman/.aws/credentials', profile: 'default' });
-AWS.config.credentials = creds;
+// Not required if environment variables are used
+// Set AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_DEFAULT_REGION and AWS_SESSION_TOKEN
+// https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-envvars.html
+// let creds = new AWS.SharedIniFileCredentials({ filename: '~/.aws/credentials', profile: 'default' });
+// AWS.config.credentials = creds;
 
 let client = new AWS.Athena({ region: 'us-east-1' })
 
