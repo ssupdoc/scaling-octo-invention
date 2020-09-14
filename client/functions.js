@@ -14,7 +14,7 @@ function getResults()
             //displayResults(this.responseText);
         }
     }
-    var url = window.location.href + "api/fetch/" + searchTerm + "/starRating";
+    var url = window.location.href + "api/fetch/" + searchTerm;
     console.log(url);
     xhttp.open("GET", url, true)
     xhttp.send();

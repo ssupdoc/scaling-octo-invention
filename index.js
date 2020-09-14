@@ -149,17 +149,6 @@ app.get('/api/fetch/', function (req, res) {
 
 app.get('/api/fetch/:searchTerm', function (req, res) {
     /* Make a SQL query and display results */
-    makeQuery("select product_title from amazon_reviews_parquet where product_category='PC' and product_title like '%" + req.params.searchTerm + "%' limit 10;")
-        .then((data) => {
-            console.log('Row Count: ', data.length)
-            console.log('DATA: ', data)
-            return res.json(data)
-        })
-        .catch((e) => { console.log('ERROR: ', e) })
-})
-
-app.get('/api/fetch/:searchTerm/starRating', function (req, res) {
-    /* Make a SQL query and display results */
     makeQuery("select product_title, star_rating from amazon_reviews_parquet where product_category='PC' and product_title like '%" + req.params.searchTerm + "%' order by star_rating desc limit 10;")
         .then((data) => {
             console.log('Row Count: ', data.length)
@@ -169,9 +158,9 @@ app.get('/api/fetch/:searchTerm/starRating', function (req, res) {
         .catch((e) => { console.log('ERROR: ', e) })
 })
 
-app.get('/api/fetch/:searchTerm/helpfulVotes', function (req, res) {
+app.get('/api/products/:productName', function (req, res) {
     /* Make a SQL query and display results */
-    makeQuery("select product_title, helpful_votes from amazon_reviews_parquet where product_category='PC' and product_title like '%" + req.params.searchTerm + "%' order by helpful_votes desc limit 10;")
+    makeQuery("select product_title, star_rating, helpful_votes, total_votes, review_headline, review_body, year from amazon_reviews_parquet where product_category='PC' and product_title like '%" + req.params.productName + "%' order by helpful_votes desc limit 10;")
         .then((data) => {
             console.log('Row Count: ', data.length)
             console.log('DATA: ', data)
