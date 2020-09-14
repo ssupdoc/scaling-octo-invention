@@ -28,27 +28,26 @@ function displayResults(results)
 
     for (var i=0; i<10; i++)
     {
-       
-            //div
-            var productDiv = document.createElement("div");
-            productDiv.id = resultsArray[i].product_title;
-            //title
-            var productTitle = document.createElement("h4");
-            productTitle.innerHTML = resultsArray[i].product_title;
-            productDiv.appendChild(productTitle);
-            //average score
-            var productRating = document.createElement("div");
-            productRating.classList.add("rating");
-            productRating.innerHTML = resultsArray[i].star_rating;
-            productDiv.appendChild(productRating);
-            //button event
-            var productButton = document.createElement("button");
-            productButton.classList.add("productButton");
-            productButton.innerText = "View Reviews";
-            productButton.addEventListener("click", getProduct(resultsArray[i].product_title))
-            productDiv.appendChild(productButton);
+        //div
+        var productDiv = document.createElement("div");
+        productDiv.id = resultsArray[i].product_title;
+        //title
+        var productTitle = document.createElement("h4");
+        productTitle.innerHTML = resultsArray[i].product_title;
+        productDiv.appendChild(productTitle);
+        //average score
+        var productRating = document.createElement("div");
+        productRating.classList.add("rating");
+        productRating.innerHTML = resultsArray[i].star_rating;
+        productDiv.appendChild(productRating);
+        //button event
+        var productButton = document.createElement("button");
+        productButton.classList.add("productButton");
+        productButton.innerText = "View Reviews";
+        productButton.addEventListener("click", getProduct(resultsArray[i].product_title))
+        productDiv.appendChild(productButton);
 
-            resultsDiv.appendChild(productDiv);        
+        resultsDiv.appendChild(productDiv);        
     }
 }
 
