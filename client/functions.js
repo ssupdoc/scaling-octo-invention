@@ -1,6 +1,12 @@
 function getResults()
 {
-    var searchTerm = document.getSelection("attribute");
+    var radioBtns = document.getElementsByName('attribute');
+    var searchTerm;
+    for(var i = 0; i < radioBtns.length; i++){
+    if(radioBtns[i].checked){
+        searchTerm = radioBtns[i].value;
+    }
+}
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
         if (this.readyState ==4 && this.status ==200){
@@ -8,7 +14,7 @@ function getResults()
             //displayResults(this.responseText);
         }
     }
-    var url = window.location.href + "api/fetch/" + searchTerm;
+    var url = window.location.href + "api/fetch/" + searchTerm + "/starRating";
     console.log(url);
     xhttp.open("GET", url, true)
     xhttp.send();
