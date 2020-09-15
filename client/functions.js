@@ -44,7 +44,7 @@ function displayResults(results)
         var productButton = document.createElement("button");
         productButton.classList.add("productButton");
         productButton.innerText = "View Reviews";
-        productButton.addEventListener("click", getProduct(resultsArray[i].product_title))
+        productButton.addEventListener("click", getProduct.bind(this, resultsArray[i].product_title), false)
         productDiv.appendChild(productButton);
 
         resultsDiv.appendChild(productDiv);        
@@ -54,7 +54,21 @@ function displayResults(results)
 function getProduct(name)
 {
     //backend stuff
-    //displayProduct(reviews)
+
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState ==4 && this.status ==200){
+            console.log(this.responseText);
+            if(this.responseText && this.responseText.length) {
+                displayProduct(this.responseText)
+            }
+        }
+    }
+    var url = window.location.href + "api/products/" + name;
+    console.log(url);
+    xhttp.open("GET", url, true)
+    xhttp.send();
+
 }
 
 function displayProduct(reviews)
@@ -67,7 +81,19 @@ function displayProduct(reviews)
     {
         //div
         var reviewDiv = document.createElement("div");
-        reviewDiv.id = reviewsArray[i].review_title;
+        reviewDiv.id = reviewsArray[i].review_headline;
+        // review headline 
+        let reviewHeadline = document.createElement("h5");
+        reviewHeadline.innerHTML = reviewsArray[i].review_headline;
+        reviewDiv.appendChild(reviewHeadline);
+        // review body 
+        let reviewBody = document.createElement("p");
+        reviewBody.innerHTML = reviewsArray[i].review_body;
+        reviewDiv.appendChild(reviewBody);
+        // ratings
+        let reviewRatings = document.createElement("p");
+        reviewRatings.innerHTML = "Rating: " + reviewsArray[i].star_ratings + " Helpful: " + reviewsArray[i].helpful_votes;
+        reviewDiv.appendChild(reviewRatings);
         //make child elements of this div
         divToDisplay.appendChild(reviewDiv);
     }
