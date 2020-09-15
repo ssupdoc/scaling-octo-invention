@@ -50,17 +50,29 @@ function displayResults(results)
         //average score
         var productRating = document.createElement("div");
         productRating.classList.add("rating");
-        productRating.innerHTML = resultsArray[i].star_rating;
+        productRating.innerHTML = resultsArray[i].star_rating + " &#9733;";
         productDiv.appendChild(productRating);
         //button event
         var productButton = document.createElement("button");
         productButton.classList.add("productButton");
         productButton.innerText = "View Reviews";
+        productButton.id = resultsArray[i].product_title + "button";
         productButton.addEventListener("click", getProduct.bind(this, resultsArray[i].product_title), false)
         productDiv.appendChild(productButton);
 
         resultsDiv.appendChild(productDiv);        
     }
+}
+
+function hideReviews(name)
+{
+    var divToHide = document.getElementById("allReviews");
+    divToHide.remove();
+    var hideButton = document.getElementById("hideButton");
+    hideButton.remove();
+    var id = name + "button";
+    var viewButton = document.getElementById(id);
+    viewButton.style.display = "block";
 }
 
 function getProduct(name)
@@ -83,7 +95,12 @@ function getProduct(name)
             }
         }
     }
-    var url = window.location.href + "api/products/" + name + "/" + searchTerm;
+    if (searchTerm == undefined) {
+        var url = window.location.href + "api/products/" + name;
+    }
+    else {
+        var url = window.location.href + "api/products/" + name + "/" + searchTerm;
+    }
     console.log(url);
     xhttp.open("GET", url, true)
     xhttp.send();
@@ -104,6 +121,23 @@ function displayProduct(reviews, name)
     }
     else
     {
+        //hide reviews button
+        var productHideButton = document.createElement("button");
+        productHideButton.classList.add("productHideButton");
+        productHideButton.innerText = "Hide Reviews";
+        productHideButton.id = "hideButton";
+        productHideButton.addEventListener("click", hideReviews.bind(this, name), false)
+        divToDisplay.appendChild(productHideButton);
+
+        //hide view review button
+        var viewReviews = document.getElementById(name + "button");
+        viewReviews.style.display = "none";
+
+        //div to display reviews
+        var allReviewsDiv = document.createElement("div");
+        allReviewsDiv.id = "allReviews";
+        divToDisplay.appendChild(allReviewsDiv);
+
         for (var i=0; i<10; i++)
         {
         //div
@@ -119,10 +153,10 @@ function displayProduct(reviews, name)
         reviewDiv.appendChild(reviewBody);
         // ratings
         let reviewRatings = document.createElement("p");
-        reviewRatings.innerHTML = "Rating: " + reviewsArray[i].star_rating + " Helpful: " + reviewsArray[i].helpful_votes;
+        reviewRatings.innerHTML = "Rating: " + reviewsArray[i].star_rating + " &#9733;" + " Helpful: " + reviewsArray[i].helpful_votes;
         reviewDiv.appendChild(reviewRatings);
         //make child elements of this div
-        divToDisplay.appendChild(reviewDiv);
+        allReviewsDiv.appendChild(reviewDiv);
         }
     }
 }
