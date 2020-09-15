@@ -24,7 +24,7 @@ const Queue = require('async/queue')
 const _ = require('lodash')
 
 const ATHENA_DB = 'default'
-const ATHENA_OUTPUT_LOCATION = 's3://reece527-test-bucket/'
+const ATHENA_OUTPUT_LOCATION = 's3://compx527-test-bucket/'
 const RESULT_SIZE = 1000
 const POLL_INTERVAL = 1000
 
@@ -33,7 +33,7 @@ const PORT = process.env.PORT || 3000;
 // Not required if environment variables are used
 // Set AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_DEFAULT_REGION and AWS_SESSION_TOKEN
 // https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-envvars.html
- let creds = new AWS.SharedIniFileCredentials({ filename: 'C:/Users/reece/.aws/credentials', profile: 'default' });
+ let creds = new AWS.SharedIniFileCredentials({ filename: '../.aws/credentials', profile: 'default' });
  AWS.config.credentials = creds;
 
 let client = new AWS.Athena({ region: 'us-east-1' })
@@ -150,6 +150,17 @@ app.get('/api/fetch/', function (req, res) {
 app.get('/api/fetch/:productType', function (req, res) {
     /* Make a SQL query and display results */
     makeQuery("select product_title, star_rating from amazon_reviews_parquet where product_category='PC' and product_title like '%" + req.params.productType + "%' order by star_rating desc limit 10;")
+        .then((data) => {
+            console.log('Row Count: ', data.length)
+            console.log('DATA: ', data)
+            return res.json(data)
+        })
+        .catch((e) => { console.log('ERROR: ', e) })
+})
+
+app.get('/api/products/:productName', function (req, res) {
+    /* Make a SQL query and display results */
+    makeQuery("select product_title, star_rating, helpful_votes, total_votes, review_headline, review_body, year from amazon_reviews_parquet where product_category='PC' and product_title like '%" + req.params.productName + "%' order by helpful_votes desc limit 10;")
         .then((data) => {
             console.log('Row Count: ', data.length)
             console.log('DATA: ', data)
