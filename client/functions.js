@@ -92,7 +92,7 @@ function displayProduct(reviews)
         reviewDiv.appendChild(reviewBody);
         // ratings
         let reviewRatings = document.createElement("p");
-        reviewRatings.innerHTML = "Rating: " + reviewsArray[i].star_ratings + " Helpful: " + reviewsArray[i].helpful_votes;
+        reviewRatings.innerHTML = "Rating: " + reviewsArray[i].star_rating + " Helpful: " + reviewsArray[i].helpful_votes;
         reviewDiv.appendChild(reviewRatings);
         //make child elements of this div
         divToDisplay.appendChild(reviewDiv);
