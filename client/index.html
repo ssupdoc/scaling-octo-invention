@@ -1,11 +1,45 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ReviewCentral</title>
+    <title>ReviewCentral - PC Amazon Reviews Analyser</title>
+    <script src="functions.js" type="text/javascript"></script>
+    <link href="style.css" type="text/css" rel="stylesheet">
 </head>
 <body>
-    Testing if it works
+    <h1>ReviewCentral</h1>
+    <h2>PC Amazon Customer Reviews Analyser</h2>
+    <main>
+        <form id="searchForm">
+            <p>What would you like to search for?<p>
+            <input type="radio" id="desktop" name="product" value="Desktop">
+            <label for="desktop">Desktops</label><br>
+            <input type="radio" id="laptop" name="product" value="Laptop">
+            <label for="laptop">Laptops</label><br>
+            <input type="radio" id="tablet" name="product" value="Tab">
+            <label for="tablet">Tablets</label><br>
+            <button type="button" id="submitButton" onclick="getResults()">Go!</button>
+        </form>
+        <form id="attributeForm">
+            <label for="attribute">Select your priority:</label><br>
+            <input type="radio" id="ram" name="attribute" value="RAM">
+            <label for="ram">RAM</label><br>
+            <input type="radio" id="harddrive" name="attribute" value="SSD">
+            <label for="harddrive">Hard Drive</label><br>
+            <input type="radio" id="graphics" name="attribute" value="Graphics">
+            <label for="graphics">Graphics</label><br>
+            <input type="radio" id="speed" name="attribute" value="Speed">
+            <label for="speed">Speed</label><br>
+            <input type="radio" id="aesthetics" name="attribute" value="Look">
+            <label for="aesthetics">Aesthetics</label><br>
+            <input type="radio" id="value" name="attribute" value="Value">
+            <label for="value">Value for Money</label><br>
+        </form>
+        <p id="loading">
+            Loading...
+        </p>
+        <div id="results">
+            <!--product results go here-->
+        </div>
+    </main>
 </body>
 </html>
