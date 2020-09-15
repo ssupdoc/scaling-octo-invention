@@ -1,0 +1,11 @@
+body {
+    font-family: 'Comic Sans', sans-serif;
+}
+
+#loading {
+    display: none;
+}
+
+#attributeForm {
+    display: none;
+}

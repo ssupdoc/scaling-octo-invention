@@ -1,12 +1,15 @@
 function getResults()
 {
-    var radioBtns = document.getElementsByName('attribute');
+    //show loading
+    document.getElementById("loading").style.display = "block";
+
+    var radioBtns = document.getElementsByName('product');
     var searchTerm;
     for(var i = 0; i < radioBtns.length; i++){
     if(radioBtns[i].checked){
         searchTerm = radioBtns[i].value;
     }
-}
+    }
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
         if (this.readyState ==4 && this.status ==200){
@@ -18,20 +21,18 @@ function getResults()
     console.log(url);
     xhttp.open("GET", url, true)
     xhttp.send();
-
 }
 
 function displayResults(results)
 {
     var resultsArray = JSON.parse(results);
-
-    //hide form
-    var form = document.getElementById("searchForm");
-    form.style.display = "none";
+    
+    //show loading
+    document.getElementById("loading").style.display = "none";
 
     //show back button
-    var back = document.getElementById("back");
-    back.style.display = "block";
+    var form = document.getElementById("attributeForm");
+    form.style.display = "block";
 
     var resultsDiv = document.getElementById("results");
     //clear results div
@@ -64,32 +65,47 @@ function displayResults(results)
 
 function getProduct(name)
 {
-    //backend stuff
+    //get selected attribute
+    var radioBtns = document.getElementsByName('attribute');
+    var searchTerm;
+    for(var i = 0; i < radioBtns.length; i++){
+    if(radioBtns[i].checked){
+        searchTerm = radioBtns[i].value;
+    }
+    }
 
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
         if (this.readyState ==4 && this.status ==200){
             console.log(this.responseText);
             if(this.responseText && this.responseText.length) {
-                displayProduct(this.responseText)
+                displayProduct(this.responseText, name)
             }
         }
     }
-    var url = window.location.href + "api/products/" + name;
+    var url = window.location.href + "api/products/" + name + "/" + searchTerm;
     console.log(url);
     xhttp.open("GET", url, true)
     xhttp.send();
 
 }
 
-function displayProduct(reviews)
+function displayProduct(reviews, name)
 {
     var reviewsArray = JSON.parse(reviews);
-    var divID = reviewsArray[0].product_title;
-    var divToDisplay = document.getElementById(divID);
+    var divToDisplay = document.getElementById(name);
+    
     //loop to display reviews
-    for (var i=0; i<10; i++)
+    if (reviewsArray.length == 0)
     {
+        var message = document.createElement("p");
+        message.innerHTML = "No related reviews found.";
+        divToDisplay.appendChild(message);
+    }
+    else
+    {
+        for (var i=0; i<10; i++)
+        {
         //div
         var reviewDiv = document.createElement("div");
         reviewDiv.id = reviewsArray[i].review_headline;
@@ -107,13 +123,6 @@ function displayProduct(reviews)
         reviewDiv.appendChild(reviewRatings);
         //make child elements of this div
         divToDisplay.appendChild(reviewDiv);
+        }
     }
-}
-
-function showForm() 
-{
-    var form = document.getElementById("searchForm");
-    form.style.display = "block";
-    var back = document.getElementById("back");
-    back.style.display = "none";
 }
