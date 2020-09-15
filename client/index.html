@@ -8,7 +8,7 @@
     <h1>ReviewCentral</h1>
     <h2>PC Amazon Customer Reviews Analyser</h2>
     <main>
-        <form>
+        <form id="searchForm">
             <label for="attribute">Select your priority:</label><br>
             <input type="radio" name="attribute" value="RAM">
             <label for="ram">RAM</label><br>
@@ -24,6 +24,10 @@
             <label for="value">Value for Money</label><br>
             <button type="button" id="submitButton" onclick="getResults()">Go!</button>
         </form>
+        <div id="back">
+            <!--holds button which shows the form again-->
+            <button type="button" id="backButton" onclick="showForm()">Search Again</button>
+        </div>
         <div id="results">
             <!--product results go here-->
         </div>

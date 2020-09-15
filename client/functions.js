@@ -24,7 +24,18 @@ function getResults()
 function displayResults(results)
 {
     var resultsArray = JSON.parse(results);
+
+    //hide form
+    var form = document.getElementById("searchForm");
+    form.style.display = "none";
+
+    //show back button
+    var back = document.getElementById("back");
+    back.style.display = "block";
+
     var resultsDiv = document.getElementById("results");
+    //clear results div
+    resultsDiv.innerHTML = "";
 
     for (var i=0; i<10; i++)
     {
@@ -97,4 +108,12 @@ function displayProduct(reviews)
         //make child elements of this div
         divToDisplay.appendChild(reviewDiv);
     }
+}
+
+function showForm() 
+{
+    var form = document.getElementById("searchForm");
+    form.style.display = "block";
+    var back = document.getElementById("back");
+    back.style.display = "none";
 }
